@@ -124,3 +124,78 @@ OOHD OOHD::loadFromFile(const std::string& filename) {
     in.close();
     return database;
 }
+
+void OOHD::generateVisualization(const std::string& filename) const {
+    std::ofstream out(filename);
+    if (!out) {
+        throw std::runtime_error("Cannot open file for writing: " + filename);
+    }
+
+    out << R"(
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OOHD Visualization</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .tree ul { list-style-type: none; padding-left: 20px; }
+        .tree li { margin: 10px 0; }
+        .node { cursor: pointer; display: inline-block; }
+        .children { display: none; }
+        .expanded > .children { display: block; }
+        .object-details { margin-left: 20px; font-size: 0.9em; color: #666; }
+        .toggle { display: inline-block; width: 10px; }
+    </style>
+</head>
+<body>
+    <h1>OOHD Visualization</h1>
+    <div class="tree">
+)";
+
+    writeObjectToHTML(out, root, 0);
+
+    out << R"(
+    </div>
+    <script>
+        document.querySelectorAll('.node').forEach(node => {
+            node.addEventListener('click', function(e) {
+                e.stopPropagation();
+                this.parentElement.classList.toggle('expanded');
+                let toggle = this.querySelector('.toggle');
+                toggle.textContent = this.parentElement.classList.contains('expanded') ? '▼' : '►';
+            });
+        });
+    </script>
+</body>
+</html>
+)";
+
+    out.close();
+}
+
+void OOHD::writeObjectToHTML(std::ofstream& out, const std::shared_ptr<DatabaseObject>& obj, int depth) const {
+    std::string indent(depth * 4, ' ');
+    out << indent << "<ul>\n";
+    out << indent << "    <li>\n";
+    out << indent << "        <div class=\"node\">";
+    if (!obj->getChildren().empty()) {
+        out << "<span class=\"toggle\">►</span> ";
+    }
+    out << obj->getType() << ": " << obj->getId() << "</div>\n";
+    out << indent << "        <div class=\"object-details\">\n";
+    for (const auto& [key, value] : obj->getAttributes()) {
+        out << indent << "            " << key << ": " << value << "<br>\n";
+    }
+    out << indent << "        </div>\n";
+    if (!obj->getChildren().empty()) {
+        out << indent << "        <div class=\"children\">\n";
+        for (const auto& child : obj->getChildren()) {
+            writeObjectToHTML(out, child, depth + 1);
+        }
+        out << indent << "        </div>\n";
+    }
+    out << indent << "    </li>\n";
+    out << indent << "</ul>\n";
+}

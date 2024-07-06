@@ -43,4 +43,8 @@ public:
     friend class DynamicObject;
 
     std::unordered_map<std::string, std::string> attributes;
+    const std::vector<std::shared_ptr<DatabaseObject>>& getChildren() const { return children; }
+    const std::unordered_map<std::string, std::string>& getAttributes() const { return attributes; }
+
+    friend class OOHD;
 };

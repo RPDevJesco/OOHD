@@ -58,29 +58,29 @@ Examples of appropriate datasets include:
 - Family trees or genealogical data
 - Decision trees and other hierarchical AI models
 - Game development scenarios, such as:
-  - Game world hierarchies (regions, areas, locations)
-  - Character skill trees
-  - Quest and dialogue trees
-  - Item crafting recipes and upgrade paths
-  - Tech trees in strategy games
+    - Game world hierarchies (regions, areas, locations)
+    - Character skill trees
+    - Quest and dialogue trees
+    - Item crafting recipes and upgrade paths
+    - Tech trees in strategy games
 - XML-like document structures
 - Menu systems and UI hierarchies
 - Small to Medium sized Datasets
 
 The OOHD system is particularly valuable for decision trees and game development for the following reasons:
 
-1. **Decision Trees**: 
-   - Naturally represents the hierarchical structure of decision nodes
-   - Supports different attributes for different types of nodes (e.g., decision nodes vs. leaf nodes)
-   - Allows for efficient traversal and querying of the tree structure
-   - Facilitates easy updates and modifications to the decision tree
+1. **Decision Trees**:
+    - Naturally represents the hierarchical structure of decision nodes
+    - Supports different attributes for different types of nodes (e.g., decision nodes vs. leaf nodes)
+    - Allows for efficient traversal and querying of the tree structure
+    - Facilitates easy updates and modifications to the decision tree
 
 2. **Game Development**:
-   - Flexible schema allows for diverse game entities with varying attributes
-   - Hierarchical structure suits many game design patterns (e.g., entity-component systems)
-   - Efficient querying supports common game operations like collision detection or AI decision-making
-   - Supports complex relationships between game objects (e.g., inventory systems, character relationships)
-   - Allows for dynamic addition and modification of game elements during runtime
+    - Flexible schema allows for diverse game entities with varying attributes
+    - Hierarchical structure suits many game design patterns (e.g., entity-component systems)
+    - Efficient querying supports common game operations like collision detection or AI decision-making
+    - Supports complex relationships between game objects (e.g., inventory systems, character relationships)
+    - Allows for dynamic addition and modification of game elements during runtime
 
 These use cases benefit from OOHD's combination of hierarchical structure and object-oriented design, allowing for intuitive modeling of complex, nested structures while maintaining flexibility in object attributes and behaviors.
 
