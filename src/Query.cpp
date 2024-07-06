@@ -1,21 +1,31 @@
 #include "Query.hpp"
 #include "DatabaseObject.hpp"
 #include <functional>
+#include <iostream>
 
 Query& Query::byType(const std::string& type) {
-    conditions.push_back([type](const DatabaseObject& obj) { return obj.getType() == type; });
+    queryType = type;
+    conditions.push_back([type](const DatabaseObject& obj) {
+        return obj.getType() == type;
+    });
     invalidateHash();
     return *this;
 }
 
 Query& Query::byAttribute(const std::string& key, const std::string& value) {
-    conditions.push_back([key, value](const DatabaseObject& obj) { return obj.getAttribute(key) == value; });
+    conditions.push_back([key, value](const DatabaseObject& obj) {
+        std::string attrValue = obj.getAttribute(key);
+        return attrValue == value;
+    });
     invalidateHash();
     return *this;
 }
 
 Query& Query::byCustomCondition(std::function<bool(const DatabaseObject&)> customCondition) {
-    conditions.push_back(customCondition);
+    conditions.push_back([customCondition](const DatabaseObject& obj) {
+        bool result = customCondition(obj);
+        return result;
+    });
     invalidateHash();
     return *this;
 }
@@ -31,6 +41,8 @@ Query& Query::andQuery() { return setOperator(Operator::AND); }
 Query& Query::notQuery() { return setOperator(Operator::NOT); }
 
 bool Query::evaluate(const DatabaseObject& obj) const {
+    if (conditions.empty()) return true;
+
     std::vector<bool> results;
     for (size_t i = 0; i < conditions.size(); ++i) {
         bool result = conditions[i](obj);
@@ -48,9 +60,12 @@ bool Query::evaluate(const DatabaseObject& obj) const {
 
 size_t Query::hash() const {
     if (!hashComputed) {
-        cachedHash = conditions.size();
-        for (const auto& op : operators) {
-            cachedHash = cachedHash * 31 + static_cast<size_t>(op);
+        cachedHash = std::hash<std::string>{}(queryType);
+        for (size_t i = 0; i < conditions.size(); ++i) {
+            cachedHash ^= i ^ std::hash<size_t>{}(conditions[i].target_type().hash_code());
+            if (i < operators.size()) {
+                cachedHash ^= std::hash<int>{}(static_cast<int>(operators[i]));
+            }
         }
         hashComputed = true;
     }

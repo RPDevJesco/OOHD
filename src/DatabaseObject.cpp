@@ -1,6 +1,7 @@
 #include "DatabaseObject.hpp"
 #include "Query.hpp"
 #include <iostream>
+#include <fstream>
 
 DatabaseObject::DatabaseObject(const std::string& id, const std::string& type)
         : id(id), type(type) {}
@@ -27,14 +28,24 @@ std::string DatabaseObject::getAttribute(const std::string& key) const {
 }
 
 void DatabaseObject::display() const {
-    std::cout << "Object ID: " << id << ", Type: " << type << std::endl;
+    //std::cout << "Object ID: " << id << ", Type: " << type << std::endl;
     for (const auto& attr : attributes) {
-        std::cout << "  " << attr.first << ": " << attr.second << std::endl;
+       // std::cout << "  " << attr.first << ": " << attr.second << std::endl;
     }
 }
 
 bool DatabaseObject::matchesQuery(const Query& query) const {
     return query.evaluate(*this);
+}
+
+void DatabaseObject::encryptString(std::string& data, const std::string& key) {
+    for (size_t i = 0; i < data.size(); ++i) {
+        data[i] ^= key[i % key.size()];
+    }
+}
+
+void DatabaseObject::decryptString(std::string& data, const std::string& key) {
+    encryptString(data, key); // XOR encryption is symmetric
 }
 
 void DatabaseObject::serialize(std::ofstream& out) const {
@@ -132,14 +143,4 @@ std::shared_ptr<DatabaseObject> DatabaseObject::deserialize(std::ifstream& in) {
     }
 
     return obj;
-}
-
-void DatabaseObject::encryptString(std::string& data, const std::string& key) {
-    for (size_t i = 0; i < data.size(); ++i) {
-        data[i] ^= key[i % key.size()];
-    }
-}
-
-void DatabaseObject::decryptString(std::string& data, const std::string& key) {
-    encryptString(data, key); // XOR encryption is symmetric
 }

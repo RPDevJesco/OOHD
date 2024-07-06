@@ -10,12 +10,11 @@ class Query;
 class OOHD;
 
 class DatabaseObject : public std::enable_shared_from_this<DatabaseObject> {
-private:
+protected:
     std::string id;
     std::string type;
     std::weak_ptr<DatabaseObject> parent;
     std::vector<std::shared_ptr<DatabaseObject>> children;
-    std::unordered_map<std::string, std::string> attributes;
 
     static void encryptString(std::string& data, const std::string& key);
     static void decryptString(std::string& data, const std::string& key);
@@ -33,9 +32,15 @@ public:
     virtual void display() const;
     virtual bool matchesQuery(const Query& query) const;
 
-    // Serialization methods
+    virtual std::shared_ptr<DatabaseObject> clone() const {
+        return std::make_shared<DatabaseObject>(*this);
+    }
+
     void serialize(std::ofstream& out) const;
     static std::shared_ptr<DatabaseObject> deserialize(std::ifstream& in);
 
     friend class OOHD;
+    friend class DynamicObject;
+
+    std::unordered_map<std::string, std::string> attributes;
 };

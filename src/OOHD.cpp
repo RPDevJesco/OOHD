@@ -1,6 +1,7 @@
 #include "OOHD.hpp"
 #include <stdexcept>
 #include <fstream>
+#include <iostream>
 
 OOHD::OOHD() : root(std::make_shared<DatabaseObject>("root", "root")) {
     objectMap["root"] = root;
@@ -41,18 +42,29 @@ void OOHD::displayFullHierarchy() const {
 }
 
 QueryResult OOHD::query(const Query& query) {
-    auto cacheIt = queryCache.find(query.hash());
-    if (cacheIt != queryCache.end()) return cacheIt->second;
+    if (query.getLimit() == 0) {
+        auto cacheIt = queryCache.find(query.hash());
+        if (cacheIt != queryCache.end()) {
+            return cacheIt->second;
+        }
+    }
 
     std::vector<std::shared_ptr<DatabaseObject>> results;
-    for (const auto& pair : objectMap) {
-        if (pair.second->matchesQuery(query)) {
-            results.push_back(pair.second);
+    for (const auto& [id, obj] : objectMap) {
+        bool matches = query.evaluate(*obj);
+
+        if (matches) {
+            results.push_back(obj);
         }
     }
 
     QueryResult queryResult(std::move(results));
-    queryCache[query.hash()] = queryResult;
+
+    // Only cache queries without LIMIT
+    if (query.getLimit() == 0) {
+        queryCache[query.hash()] = queryResult;
+    }
+
     return queryResult;
 }
 

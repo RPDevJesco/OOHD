@@ -10,6 +10,7 @@ set(SOURCES
         src/Query.cpp
         src/QueryResult.cpp
         src/OOHD.cpp
+        src/OOHDQuery.cpp
         src/main.cpp
 )
 
@@ -18,7 +19,10 @@ set(HEADERS
         include/DatabaseObject.hpp
         include/Query.hpp
         include/QueryResult.hpp
+        include/OOHDQuery.hpp
         include/OOHD.hpp
+        include/OOHDList.hpp
+        include/DynamicObject.hpp
 )
 
 # Create the executable
