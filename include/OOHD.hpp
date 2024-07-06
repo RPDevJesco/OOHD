@@ -26,4 +26,8 @@ public:
     // New methods for saving and loading
     void saveToFile(const std::string& filename) const;
     static OOHD loadFromFile(const std::string& filename);
+    void generateVisualization(const std::string& filename) const;
+
+private:
+    void writeObjectToHTML(std::ofstream& out, const std::shared_ptr<DatabaseObject>& obj, int depth) const;
 };

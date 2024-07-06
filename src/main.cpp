@@ -77,5 +77,7 @@ int main() {
         std::cerr << "Error: " << e.what() << std::endl;
     }
 
+    database.generateVisualization("oohd_visualization.html");
+
     return 0;
 }
