@@ -4,7 +4,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build
-      run: mkdir -p build && cd build && cmake .. && make
+      run: mkdir -p build && cd build && cmake ..
     - name: Deploy
       run: echo Deploying...
     - env:
@@ -16,7 +16,7 @@ jobs:
         body: Auto-generated release
         draft: false
         prerelease: false
-        tag_name: 0.1.20
+        tag_name: 0.1.25
   build_ubuntu:
     runs-on: ubuntu-latest
     steps:
@@ -34,13 +34,13 @@ jobs:
         body: Auto-generated release
         draft: false
         prerelease: false
-        tag_name: 0.1.20
+        tag_name: 0.1.25
   build_windows:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
     - name: Build
-      run: mkdir -p build && cd build && cmake .. && make
+      run: mkdir -p build && cd build && cmake ..
     - name: Deploy
       run: echo Deploying...
     - env:
@@ -52,7 +52,7 @@ jobs:
         body: Auto-generated release
         draft: false
         prerelease: false
-        tag_name: 0.1.20
+        tag_name: 0.1.25
 name: CI
 on:
 - push
