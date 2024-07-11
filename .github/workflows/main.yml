@@ -2,17 +2,15 @@ jobs:
   build_macos:
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup CMake
-      uses: jwlawson/actions-setup-cmake@v1.13
-    - name: Build C++ Project
-      run: mkdir build && cd build && cmake .. && make
+    - uses: actions/checkout@v2
+    - name: Build
+      run: mkdir -p build && cd build && cmake .. && make
     - name: Locate Executable
       run: "\n                executable=$(find build -type f -executable -print -quit)\n                echo \"EXECUTABLE_PATH=$executable\" >> $GITHUB_ENV\n                if [ -z \"$executable\" ]; then\n                    echo \"No executable found\"\n                    exit 1\n                fi\n            "
     - name: Debug - List Build Output
       run: "\n                echo \"Listing build directory:\"\n                ls -R build\n                echo \"Executable path: $EXECUTABLE_PATH\"\n            "
     - name: Upload artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v2
       with:
         name: macos-latest-artifact
         path: ${{ env.EXECUTABLE_PATH }}
@@ -25,24 +23,19 @@ jobs:
         asset_content_type: application/octet-stream
         asset_name: oohd-macos-latest
         asset_path: ${{ env.EXECUTABLE_PATH }}
-        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164920799/assets
-    - if: failure()
-      name: Error Logging
-      run: "\n                echo \"Error occurred in previous step\"\n                echo \"EXECUTABLE_PATH: ${{ env.EXECUTABLE_PATH }}\"\n                echo \"Listing build directory contents:\"\n                ls -R build\n            "
+        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164922683/assets
   build_ubuntu:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup CMake
-      uses: jwlawson/actions-setup-cmake@v1.13
-    - name: Build C++ Project
-      run: mkdir build && cd build && cmake .. && make
+    - uses: actions/checkout@v2
+    - name: Build
+      run: mkdir -p build && cd build && cmake .. && make
     - name: Locate Executable
       run: "\n                executable=$(find build -type f -executable -print -quit)\n                echo \"EXECUTABLE_PATH=$executable\" >> $GITHUB_ENV\n                if [ -z \"$executable\" ]; then\n                    echo \"No executable found\"\n                    exit 1\n                fi\n            "
     - name: Debug - List Build Output
       run: "\n                echo \"Listing build directory:\"\n                ls -R build\n                echo \"Executable path: $EXECUTABLE_PATH\"\n            "
     - name: Upload artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v2
       with:
         name: ubuntu-latest-artifact
         path: ${{ env.EXECUTABLE_PATH }}
@@ -55,24 +48,19 @@ jobs:
         asset_content_type: application/octet-stream
         asset_name: oohd-ubuntu-latest
         asset_path: ${{ env.EXECUTABLE_PATH }}
-        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164920799/assets
-    - if: failure()
-      name: Error Logging
-      run: "\n                echo \"Error occurred in previous step\"\n                echo \"EXECUTABLE_PATH: ${{ env.EXECUTABLE_PATH }}\"\n                echo \"Listing build directory contents:\"\n                ls -R build\n            "
+        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164922683/assets
   build_windows:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup CMake
-      uses: jwlawson/actions-setup-cmake@v1.13
-    - name: Build C++ Project
+    - uses: actions/checkout@v2
+    - name: Build
       run: mkdir build && cd build && cmake .. && cmake --build . --config Release
     - name: Locate Executable
       run: "\n                $executable = Get-ChildItem -Path build -Recurse -File | Where-Object { $_.Name -like \"*.exe\" } | Select-Object -First 1 -ExpandProperty FullName\n                echo \"EXECUTABLE_PATH=$executable\" >> $env:GITHUB_ENV\n                if (-not $executable) {\n                    echo \"No executable found\"\n                    exit 1\n                }\n            "
     - name: Debug - List Build Output
       run: "\n                echo \"Listing build directory:\"\n                Get-ChildItem -Path build -Recurse\n                echo \"Executable path: $env:EXECUTABLE_PATH\"\n            "
     - name: Upload artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v2
       with:
         name: windows-latest-artifact
         path: ${{ env.EXECUTABLE_PATH }}
@@ -85,36 +73,7 @@ jobs:
         asset_content_type: application/octet-stream
         asset_name: oohd-windows-latest.exe
         asset_path: ${{ env.EXECUTABLE_PATH }}
-        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164920799/assets
-    - if: failure()
-      name: Error Logging
-      run: "\n                echo \"Error occurred in previous step\"\n                echo \"EXECUTABLE_PATH: ${{ env.EXECUTABLE_PATH }}\"\n                echo \"Listing build directory contents:\"\n                ls -R build\n            "
-  verify_artifacts:
-    name: Verify Artifacts
-    needs:
-    - build_ubuntu
-    - build_macos
-    - build_windows
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - name: Download ubuntu-latest Artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: ubuntu-latest-artifact
-        path: ./ubuntu-latest-artifact
-    - name: Download macos-latest Artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: macos-latest-artifact
-        path: ./macos-latest-artifact
-    - name: Download windows-latest Artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: windows-latest-artifact
-        path: ./windows-latest-artifact
-    - name: Verify Artifacts
-      run: "\n        for platform in ubuntu-latest macos-latest windows-latest; do\n            echo \"Listing contents of $platform artifact:\"\n            ls -R $platform-artifact\n            echo \"\"\n        done\n        "
+        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164922683/assets
 name: CI
 on:
 - push
