@@ -1,88 +1,70 @@
 jobs:
   build_macos:
-    runs-on: macos-11
+    runs-on: macos-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Build
+    - name: Build C++
       run: mkdir -p build && cd build && cmake .. && make
-    - name: Deploy
-      run: echo Deploying...
-    - env:
-        GITHUB_TOKEN: ${{ secrets.PAT }}
-      id: create_release
-      name: Create Release
-      uses: actions/create-release@v1
+    - name: Create artifact
+      run: mkdir -p ./artifact && cp -r ./* ./artifact || true
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
       with:
-        body: Auto-generated release
-        draft: false
-        prerelease: false
-        release_name: 0.1.32
-        tag_name: 0.1.32
+        name: macos-latest-artifact
+        path: ./artifact
     - env:
-        GITHUB_TOKEN: ${{ secrets.PAT }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       name: Upload Release Asset
       uses: actions/upload-release-asset@v1
       with:
-        asset_content_type: application/octet-stream
-        asset_name: macos_artifact_name
-        asset_path: ./build/macos/artifact
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_content_type: application/zip
+        asset_name: macos-latest-artifact.zip
+        asset_path: ./artifact.zip
+        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164905087/assets{?name,label}
   build_ubuntu:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Build
+    - name: Build C++
       run: mkdir -p build && cd build && cmake .. && make
-    - name: Deploy
-      run: echo Deploying...
-    - env:
-        GITHUB_TOKEN: ${{ secrets.PAT }}
-      id: create_release
-      name: Create Release
-      uses: actions/create-release@v1
+    - name: Create artifact
+      run: mkdir -p ./artifact && cp -r ./* ./artifact || true
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
       with:
-        body: Auto-generated release
-        draft: false
-        prerelease: false
-        release_name: 0.1.32
-        tag_name: 0.1.32
+        name: ubuntu-latest-artifact
+        path: ./artifact
     - env:
-        GITHUB_TOKEN: ${{ secrets.PAT }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       name: Upload Release Asset
       uses: actions/upload-release-asset@v1
       with:
-        asset_content_type: application/octet-stream
-        asset_name: ubuntu_artifact_name
-        asset_path: ./build/ubuntu/artifact
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_content_type: application/zip
+        asset_name: ubuntu-latest-artifact.zip
+        asset_path: ./artifact.zip
+        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164905087/assets{?name,label}
   build_windows:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Build
+    - name: Build C++
       run: mkdir build && cd build && cmake .. && cmake --build .
-    - name: Deploy
-      run: echo Deploying...
-    - env:
-        GITHUB_TOKEN: ${{ secrets.PAT }}
-      id: create_release
-      name: Create Release
-      uses: actions/create-release@v1
+    - name: Create artifact
+      run: mkdir -p ./artifact && cp -r ./* ./artifact || true
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
       with:
-        body: Auto-generated release
-        draft: false
-        prerelease: false
-        release_name: 0.1.32
-        tag_name: 0.1.32
+        name: windows-latest-artifact
+        path: ./artifact
     - env:
-        GITHUB_TOKEN: ${{ secrets.PAT }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       name: Upload Release Asset
       uses: actions/upload-release-asset@v1
       with:
-        asset_content_type: application/octet-stream
-        asset_name: windows_artifact_name
-        asset_path: ./build/windows/artifact
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_content_type: application/zip
+        asset_name: windows-latest-artifact.zip
+        asset_path: ./artifact.zip
+        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164905087/assets{?name,label}
 name: CI
 on:
 - push
