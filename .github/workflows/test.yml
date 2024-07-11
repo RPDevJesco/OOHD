@@ -38,7 +38,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: ubuntu-latest-artifact
-        path: build/OOHD
+        path: build/oohd
         retention-days: 1
     - env:
         GITHUB_TOKEN: ${{ secrets.PAT }}
