@@ -9,6 +9,8 @@ jobs:
       run: mkdir build && cd build && cmake .. && make
     - name: List Build Directory
       run: ls -R build
+    - name: Debug - List Build Output
+      run: "\n            echo \"Listing build directory:\"\n            ls -R build\n            echo \"Searching for executable:\"\n            find build -type f -executable\n            "
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
@@ -23,7 +25,7 @@ jobs:
         asset_content_type: application/octet-stream
         asset_name: OOHD-macos-latest
         asset_path: build/OOHD
-        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164917479/assets{?name,label}
+        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164919609/assets{?name,label}
   build_ubuntu:
     runs-on: ubuntu-latest
     steps:
@@ -34,6 +36,8 @@ jobs:
       run: mkdir build && cd build && cmake .. && make
     - name: List Build Directory
       run: ls -R build
+    - name: Debug - List Build Output
+      run: "\n            echo \"Listing build directory:\"\n            ls -R build\n            echo \"Searching for executable:\"\n            find build -type f -executable\n            "
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
@@ -48,7 +52,7 @@ jobs:
         asset_content_type: application/octet-stream
         asset_name: OOHD-ubuntu-latest
         asset_path: build/oohd
-        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164917479/assets{?name,label}
+        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164919609/assets{?name,label}
   build_windows:
     runs-on: windows-latest
     steps:
@@ -59,11 +63,13 @@ jobs:
       run: mkdir build && cd build && cmake .. && cmake --build . --config Release
     - name: List Build Directory
       run: Get-ChildItem -Path build -Recurse
+    - name: Debug - List Build Output
+      run: "\n            echo \"Listing build directory:\"\n            dir build /s\n            echo \"Searching for executable:\"\n            Get-ChildItem -Path build -Recurse -File | Where-Object { $_.Name -like \"*.exe\" }\n            "
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: windows-latest-artifact
-        path: build/OOHD
+        path: build/x64/Release/oohd.exe
         retention-days: 1
     - env:
         GITHUB_TOKEN: ${{ secrets.PAT }}
@@ -72,8 +78,8 @@ jobs:
       with:
         asset_content_type: application/octet-stream
         asset_name: OOHD-windows-latest.exe
-        asset_path: build/OOHD
-        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164917479/assets{?name,label}
+        asset_path: build/x64/Release/oohd.exe
+        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164919609/assets{?name,label}
   verify_artifacts:
     name: Verify Artifacts
     needs:
