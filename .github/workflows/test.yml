@@ -7,8 +7,6 @@ jobs:
       uses: jwlawson/actions-setup-cmake@v1.13
     - name: Build C++ Project
       run: mkdir build && cd build && cmake .. && make
-    - name: Build C++ Project
-      run: mkdir build && cd build && cmake -G Ninja .. && ninja
     - name: List Build Directory
       run: ls -R build
     - name: Upload artifact
@@ -34,8 +32,6 @@ jobs:
       uses: jwlawson/actions-setup-cmake@v1.13
     - name: Build C++ Project
       run: mkdir build && cd build && cmake .. && make
-    - name: Build C++ Project
-      run: mkdir build && cd build && cmake -G Ninja .. && ninja
     - name: List Build Directory
       run: ls -R build
     - name: Upload artifact
