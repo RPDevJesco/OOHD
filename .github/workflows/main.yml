@@ -6,12 +6,14 @@ jobs:
     - name: Build C++
       run: mkdir -p build && cd build && cmake .. && make
     - name: Create artifact
-      run: mkdir -p ./artifact && cp -r ./* ./artifact || true
+      run: mkdir -p ./artifact && cp -r . ./artifact && find ./artifact -mindepth 1 -maxdepth 1 -name artifact -prune -o -exec mv {} ./artifact/content \;
+    - name: Zip artifact
+      run: cd artifact && zip -r ../artifact.zip .
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
         name: macos-latest-artifact
-        path: ./artifact
+        path: ./artifact.zip
     - env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       name: Upload Release Asset
@@ -20,7 +22,7 @@ jobs:
         asset_content_type: application/zip
         asset_name: macos-latest-artifact.zip
         asset_path: ./artifact.zip
-        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164905087/assets{?name,label}
+        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164905372/assets{?name,label}
   build_ubuntu:
     runs-on: ubuntu-latest
     steps:
@@ -28,12 +30,14 @@ jobs:
     - name: Build C++
       run: mkdir -p build && cd build && cmake .. && make
     - name: Create artifact
-      run: mkdir -p ./artifact && cp -r ./* ./artifact || true
+      run: mkdir -p ./artifact && cp -r . ./artifact && find ./artifact -mindepth 1 -maxdepth 1 -name artifact -prune -o -exec mv {} ./artifact/content \;
+    - name: Zip artifact
+      run: cd artifact && zip -r ../artifact.zip .
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
         name: ubuntu-latest-artifact
-        path: ./artifact
+        path: ./artifact.zip
     - env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       name: Upload Release Asset
@@ -42,7 +46,7 @@ jobs:
         asset_content_type: application/zip
         asset_name: ubuntu-latest-artifact.zip
         asset_path: ./artifact.zip
-        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164905087/assets{?name,label}
+        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164905372/assets{?name,label}
   build_windows:
     runs-on: windows-latest
     steps:
@@ -50,12 +54,14 @@ jobs:
     - name: Build C++
       run: mkdir build && cd build && cmake .. && cmake --build .
     - name: Create artifact
-      run: mkdir -p ./artifact && cp -r ./* ./artifact || true
+      run: New-Item -ItemType Directory -Force -Path .\artifact; Get-ChildItem -Exclude artifact | Copy-Item -Destination .\artifact -Recurse -Force
+    - name: Zip artifact
+      run: Compress-Archive -Path .\artifact\* -DestinationPath .\artifact.zip
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
         name: windows-latest-artifact
-        path: ./artifact
+        path: ./artifact.zip
     - env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       name: Upload Release Asset
@@ -64,7 +70,7 @@ jobs:
         asset_content_type: application/zip
         asset_name: windows-latest-artifact.zip
         asset_path: ./artifact.zip
-        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164905087/assets{?name,label}
+        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164905372/assets{?name,label}
 name: CI
 on:
 - push
