@@ -1,0 +1,107 @@
+jobs:
+  build_macos:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build C++
+      run: mkdir -p build && cd build && cmake .. && make
+    - name: Create artifact
+      run: echo "This is a sample artifact for ${{ runner.os }}" > artifact.txt
+    - name: Debug - List directory contents
+      run: ls -la
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: macos-latest-artifact
+        path: artifact.txt
+        retention-days: 1
+    - env:
+        GITHUB_TOKEN: ${{ secrets.PAT }}
+      name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      with:
+        asset_content_type: text/plain
+        asset_name: macos-latest-artifact.txt
+        asset_path: ./artifact.txt
+        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164909490/assets{?name,label}
+  build_ubuntu:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build C++
+      run: mkdir -p build && cd build && cmake .. && make
+    - name: Create artifact
+      run: echo "This is a sample artifact for ${{ runner.os }}" > artifact.txt
+    - name: Debug - List directory contents
+      run: ls -la
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ubuntu-latest-artifact
+        path: artifact.txt
+        retention-days: 1
+    - env:
+        GITHUB_TOKEN: ${{ secrets.PAT }}
+      name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      with:
+        asset_content_type: text/plain
+        asset_name: ubuntu-latest-artifact.txt
+        asset_path: ./artifact.txt
+        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164909490/assets{?name,label}
+  build_windows:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build C++
+      run: mkdir build && cd build && cmake .. && cmake --build .
+    - name: Create artifact
+      run: echo "This is a sample artifact for Windows" > artifact.txt
+    - name: Debug - List directory contents
+      run: Get-ChildItem -Force
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: windows-latest-artifact
+        path: artifact.txt
+        retention-days: 1
+    - env:
+        GITHUB_TOKEN: ${{ secrets.PAT }}
+      name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      with:
+        asset_content_type: text/plain
+        asset_name: windows-latest-artifact.txt
+        asset_path: ./artifact.txt
+        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164909490/assets{?name,label}
+  verify_artifacts:
+    name: Verify Artifacts
+    needs:
+    - build_ubuntu
+    - build_macos
+    - build_windows
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Download Ubuntu Artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: ubuntu-latest-artifact
+        path: ./ubuntu-artifact
+    - name: Download macOS Artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: macos-latest-artifact
+        path: ./macos-artifact
+    - name: Download Windows Artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: windows-latest-artifact
+        path: ./windows-artifact
+    - name: Verify Artifacts
+      run: "\n                echo \"Ubuntu Artifact Content:\"\n                cat ./ubuntu-artifact/artifact.txt\n                echo \"\"\n                echo \"macOS Artifact Content:\"\n                cat ./macos-artifact/artifact.txt\n                echo \"\"\n                echo \"Windows Artifact Content:\"\n                cat ./windows-artifact/artifact.txt\n                "
+name: CI
+on:
+- push
+- pull_request
