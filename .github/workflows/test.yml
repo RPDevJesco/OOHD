@@ -23,7 +23,7 @@ jobs:
         asset_content_type: application/octet-stream
         asset_name: OOHD-macos-latest
         asset_path: build/OOHD
-        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164910760/assets{?name,label}
+        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164912967/assets{?name,label}
   build_ubuntu:
     runs-on: ubuntu-latest
     steps:
@@ -48,7 +48,7 @@ jobs:
         asset_content_type: application/octet-stream
         asset_name: OOHD-ubuntu-latest
         asset_path: build/oohd
-        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164910760/assets{?name,label}
+        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164912967/assets{?name,label}
   build_windows:
     runs-on: windows-latest
     steps:
@@ -63,7 +63,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: windows-latest-artifact
-        path: build\Release/OOHD.exe
+        path: build/OOHD.exe
         retention-days: 1
     - env:
         GITHUB_TOKEN: ${{ secrets.PAT }}
@@ -72,8 +72,8 @@ jobs:
       with:
         asset_content_type: application/octet-stream
         asset_name: OOHD-windows-latest.exe
-        asset_path: build\Release/OOHD.exe
-        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164910760/assets{?name,label}
+        asset_path: build/OOHD.exe
+        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164912967/assets{?name,label}
   verify_artifacts:
     name: Verify Artifacts
     needs:
