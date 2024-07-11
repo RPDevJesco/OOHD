@@ -7,13 +7,15 @@ jobs:
       uses: jwlawson/actions-setup-cmake@v1.13
     - name: Build C++ Project
       run: mkdir build && cd build && cmake .. && make
+    - name: Locate Executable
+      run: "\n                executable=$(find build -type f -executable -print -quit)\n                echo \"EXECUTABLE_PATH=$executable\" >> $GITHUB_ENV\n                if [ -z \"$executable\" ]; then\n                    echo \"No executable found\"\n                    exit 1\n                fi\n            "
     - name: Debug - List Build Output
-      run: "\n                echo \"Listing build directory:\"\n                ls -R build\n                echo \"Searching for executable:\"\n                find build -type f -perm +111 -print\n            "
+      run: "\n                echo \"Listing build directory:\"\n                ls -R build\n                echo \"Executable path: $EXECUTABLE_PATH\"\n            "
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: macos-latest-artifact
-        path: build/oohd
+        path: ${{ env.EXECUTABLE_PATH }}
         retention-days: 1
     - env:
         GITHUB_TOKEN: ${{ secrets.PAT }}
@@ -22,8 +24,11 @@ jobs:
       with:
         asset_content_type: application/octet-stream
         asset_name: oohd-macos-latest
-        asset_path: build/oohd
-        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164920387/assets{?name,label}
+        asset_path: ${{ env.EXECUTABLE_PATH }}
+        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164920799/assets
+    - if: failure()
+      name: Error Logging
+      run: "\n                echo \"Error occurred in previous step\"\n                echo \"EXECUTABLE_PATH: ${{ env.EXECUTABLE_PATH }}\"\n                echo \"Listing build directory contents:\"\n                ls -R build\n            "
   build_ubuntu:
     runs-on: ubuntu-latest
     steps:
@@ -32,13 +37,15 @@ jobs:
       uses: jwlawson/actions-setup-cmake@v1.13
     - name: Build C++ Project
       run: mkdir build && cd build && cmake .. && make
+    - name: Locate Executable
+      run: "\n                executable=$(find build -type f -executable -print -quit)\n                echo \"EXECUTABLE_PATH=$executable\" >> $GITHUB_ENV\n                if [ -z \"$executable\" ]; then\n                    echo \"No executable found\"\n                    exit 1\n                fi\n            "
     - name: Debug - List Build Output
-      run: "\n                echo \"Listing build directory:\"\n                ls -R build\n                echo \"Searching for executable:\"\n                find build -type f -executable\n            "
+      run: "\n                echo \"Listing build directory:\"\n                ls -R build\n                echo \"Executable path: $EXECUTABLE_PATH\"\n            "
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: ubuntu-latest-artifact
-        path: build/oohd
+        path: ${{ env.EXECUTABLE_PATH }}
         retention-days: 1
     - env:
         GITHUB_TOKEN: ${{ secrets.PAT }}
@@ -47,8 +54,11 @@ jobs:
       with:
         asset_content_type: application/octet-stream
         asset_name: oohd-ubuntu-latest
-        asset_path: build/oohd
-        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164920387/assets{?name,label}
+        asset_path: ${{ env.EXECUTABLE_PATH }}
+        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164920799/assets
+    - if: failure()
+      name: Error Logging
+      run: "\n                echo \"Error occurred in previous step\"\n                echo \"EXECUTABLE_PATH: ${{ env.EXECUTABLE_PATH }}\"\n                echo \"Listing build directory contents:\"\n                ls -R build\n            "
   build_windows:
     runs-on: windows-latest
     steps:
@@ -57,13 +67,15 @@ jobs:
       uses: jwlawson/actions-setup-cmake@v1.13
     - name: Build C++ Project
       run: mkdir build && cd build && cmake .. && cmake --build . --config Release
+    - name: Locate Executable
+      run: "\n                $executable = Get-ChildItem -Path build -Recurse -File | Where-Object { $_.Name -like \"*.exe\" } | Select-Object -First 1 -ExpandProperty FullName\n                echo \"EXECUTABLE_PATH=$executable\" >> $env:GITHUB_ENV\n                if (-not $executable) {\n                    echo \"No executable found\"\n                    exit 1\n                }\n            "
     - name: Debug - List Build Output
-      run: "\n                echo \"Listing build directory:\"\n                Get-ChildItem -Path build -Recurse\n                echo \"Searching for executable:\"\n                Get-ChildItem -Path build -Recurse -File | Where-Object { $_.Name -like \"*.exe\" }\n            "
+      run: "\n                echo \"Listing build directory:\"\n                Get-ChildItem -Path build -Recurse\n                echo \"Executable path: $env:EXECUTABLE_PATH\"\n            "
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: windows-latest-artifact
-        path: build\Release\oohd.exe
+        path: ${{ env.EXECUTABLE_PATH }}
         retention-days: 1
     - env:
         GITHUB_TOKEN: ${{ secrets.PAT }}
@@ -72,8 +84,11 @@ jobs:
       with:
         asset_content_type: application/octet-stream
         asset_name: oohd-windows-latest.exe
-        asset_path: build\Release\oohd.exe
-        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164920387/assets{?name,label}
+        asset_path: ${{ env.EXECUTABLE_PATH }}
+        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164920799/assets
+    - if: failure()
+      name: Error Logging
+      run: "\n                echo \"Error occurred in previous step\"\n                echo \"EXECUTABLE_PATH: ${{ env.EXECUTABLE_PATH }}\"\n                echo \"Listing build directory contents:\"\n                ls -R build\n            "
   verify_artifacts:
     name: Verify Artifacts
     needs:
