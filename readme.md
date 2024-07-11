@@ -86,7 +86,7 @@ These use cases benefit from OOHD's combination of hierarchical structure and ob
 
 ## Recent Improvements
 
-1. Enhanced query parsing and execution for SQL-like queries.
+1. Enhanced query parsing and execution for SQL-like queries. (Inspired by Salesforce Apex).
 2. Improved caching mechanism that ensures up-to-date results for queries with LIMIT clauses.
 3. Added detailed debugging output for query execution.
 4. Implemented a more robust hash function for query caching.
