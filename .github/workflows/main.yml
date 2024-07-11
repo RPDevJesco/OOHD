@@ -4,7 +4,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build
-      run: mkdir -p build && cd build && cmake ..
+      run: mkdir -p build && cd build && cmake .. && make
     - name: Deploy
       run: echo Deploying...
     - env:
@@ -16,8 +16,8 @@ jobs:
         body: Auto-generated release
         draft: false
         prerelease: false
-        release_name: 0.1.31
-        tag_name: 0.1.31
+        release_name: 0.1.32
+        tag_name: 0.1.32
     - env:
         GITHUB_TOKEN: ${{ secrets.PAT }}
       name: Upload Release Asset
@@ -44,8 +44,8 @@ jobs:
         body: Auto-generated release
         draft: false
         prerelease: false
-        release_name: 0.1.31
-        tag_name: 0.1.31
+        release_name: 0.1.32
+        tag_name: 0.1.32
     - env:
         GITHUB_TOKEN: ${{ secrets.PAT }}
       name: Upload Release Asset
@@ -72,8 +72,8 @@ jobs:
         body: Auto-generated release
         draft: false
         prerelease: false
-        release_name: 0.1.31
-        tag_name: 0.1.31
+        release_name: 0.1.32
+        tag_name: 0.1.32
     - env:
         GITHUB_TOKEN: ${{ secrets.PAT }}
       name: Upload Release Asset
