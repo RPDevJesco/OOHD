@@ -47,7 +47,7 @@ jobs:
       with:
         asset_content_type: application/octet-stream
         asset_name: OOHD-ubuntu-latest
-        asset_path: build/OOHD
+        asset_path: build/oohd
         upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164910760/assets{?name,label}
   build_windows:
     runs-on: windows-latest
