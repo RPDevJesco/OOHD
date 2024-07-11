@@ -61,8 +61,6 @@ jobs:
       uses: jwlawson/actions-setup-cmake@v1.13
     - name: Build C++ Project
       run: mkdir build && cd build && cmake .. && cmake --build . --config Release
-    - name: Build C++ Project
-      run: mkdir build && cd build && cmake -G Ninja .. && ninja
     - name: List Build Directory
       run: Get-ChildItem -Path build -Recurse
     - name: Upload artifact
