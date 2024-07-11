@@ -3,8 +3,14 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Build C++
-      run: mkdir -p build && cd build && cmake .. && make
+    - name: Setup CMake
+      uses: jwlawson/actions-setup-cmake@v1.13
+    - name: Setup Ninja
+      uses: ashutoshvarma/setup-ninja@master
+    - name: Build C++ Project
+      run: mkdir build && cd build && cmake -G Ninja .. && ninja
+    - name: List Build Directory
+      run: ls -R build
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
@@ -19,13 +25,19 @@ jobs:
         asset_content_type: application/octet-stream
         asset_name: OOHD-macos-latest
         asset_path: build/OOHD
-        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164910154/assets{?name,label}
+        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164910503/assets{?name,label}
   build_ubuntu:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Build C++
-      run: mkdir -p build && cd build && cmake .. && make
+    - name: Setup CMake
+      uses: jwlawson/actions-setup-cmake@v1.13
+    - name: Setup Ninja
+      uses: ashutoshvarma/setup-ninja@master
+    - name: Build C++ Project
+      run: mkdir build && cd build && cmake -G Ninja .. && ninja
+    - name: List Build Directory
+      run: ls -R build
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
@@ -40,13 +52,19 @@ jobs:
         asset_content_type: application/octet-stream
         asset_name: OOHD-ubuntu-latest
         asset_path: build/OOHD
-        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164910154/assets{?name,label}
+        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164910503/assets{?name,label}
   build_windows:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v4
-    - name: Build C++
-      run: mkdir build && cd build && cmake .. && cmake --build .
+    - name: Setup CMake
+      uses: jwlawson/actions-setup-cmake@v1.13
+    - name: Setup Ninja
+      uses: ashutoshvarma/setup-ninja@master
+    - name: Build C++ Project
+      run: mkdir build && cd build && cmake -G Ninja .. && ninja
+    - name: List Build Directory
+      run: Get-ChildItem -Path build -Recurse
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
@@ -61,7 +79,7 @@ jobs:
         asset_content_type: application/octet-stream
         asset_name: OOHD-windows-latest.exe
         asset_path: build/OOHD.exe
-        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164910154/assets{?name,label}
+        upload_url: https://uploads.github.com/repos/RPDevJesco/OOHD/releases/164910503/assets{?name,label}
   verify_artifacts:
     name: Verify Artifacts
     needs:
